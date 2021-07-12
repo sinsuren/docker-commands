@@ -1,0 +1,75 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nginx-deny-all
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress: []
+
+
+
+
+-----
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nginx-allow
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+      role: web
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: test
+
+
+
+
+-----
+
+
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+  namespace: default
+spec:
+  podSelector: {}
+  ingress: []
+
+
+------
+
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: test
+  name: deny-from-other-namespaces
+spec:
+  podSelector:
+    matchLabels:
+  ingress:
+  - from:
+    - podSelector: {}
+
+
+
+-------
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: test
+  name: allow-all-namespaces
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+      role: web
+  ingress:
+  - from:
+    - namespaceSelector: {}

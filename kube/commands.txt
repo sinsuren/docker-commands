@@ -1,0 +1,363 @@
+Create the Pod
+kubectl create -f pod.yaml
+
+pod/mypod created
+List the Pods
+kubectl get pods
+
+kubectl get pods -o wide
+
+Describe the Pods
+kubectl describe pod mypod
+
+Get the Pod details in yaml format
+kubectl get pod mypod -o yaml
+
+Delete the Pod
+kubectl delete pod mypod
+
+kubectl get pods
+
+List the current the Namespaces
+kubectl get namespaces
+
+Create a new Namespace
+kubectl create namespace test
+
+Create a Pod in the newly created Namespace
+kubectl create -f pod.yaml -n test
+
+kubectl get pods -n test
+
+Delete the Namespace 
+kubectl delete namespace test
+
+kubectl get ns
+
+
+
+Create the ReplicaSet
+kubectl apply -f replicaset.yaml
+
+List the ReplicaSets
+kubectl get replicaset
+
+List the Pods
+kubectl get pod
+
+Delete the ReplicaSet
+kubectl delete replicaset nginx
+
+
+
+
+
+Create the Deployment
+kubectl apply -f deployment.yaml
+
+List the Deployments
+kubectl get deployment
+
+List the ReplicaSets
+kubectl get rs
+
+List the Pods
+kubectl get pods
+
+
+
+
+
+
+
+Scaling down the Deployment to 1 Replica
+kubectl scale deployment nginx-deploy --replicas=1
+
+execute command
+kubectl get deploy
+
+execute command
+kubectl get pods
+
+execute command
+Scaling up the Deployment to 5 Replicas
+kubectl scale deployment nginx-deploy --replicas=2
+
+execute command
+kubectl get pods
+
+
+
+
+Create a Pod
+kubectl run nginx --image=nginx:alpine
+
+execute command
+Get the list of all the running pods in the default namespace
+kubectl get pods --field-selector status.phase=Running
+
+execute command
+Get the list of all the running Pods in all the namespaces
+kubectl get pods --all-namespaces --field-selector status.phase=Running
+
+execute command
+Get all running Pods in the cluster with restartPolicy as Always
+kubectl get pods --field-selector=status.phase=Running,spec.restartPolicy=Always
+
+execute command
+Create a new namespace and deploy nginx app with same pod  name nginx
+
+kubectl create ns v1
+
+execute command
+kubectl run nginx --image=nginx:alpine -n v1
+
+execute command
+Get all pods in the cluster with name nginx
+kubectl get pods --all-namespaces --field-selector=metadata.name=nginx
+
+execute command
+Delete the v1 namespace and nginx Pod from the default namespace
+kubectl delete ns v1
+
+execute command
+kubectl delete pod nginx
+
+execute command
+
+
+
+Updating the image version for our container
+kubectl set image deployment/nginx-deploy nginx=nginx:stable
+
+Checkout the RollOut status
+kubectl rollout status deployment nginx-deploy
+
+execute command
+deployment.apps/nginx-deploy scaled
+We can now describe any Pod to see if the image version is change or not.
+Let's update it one more time and watch the ReplicaSet changes. 
+kubectl set image deployment/nginx-deploy nginx=nginx:latest
+
+execute command
+Run the following command on the terminal directly 
+kubectl get rs -w
+
+Explore maxSurge and maxUnavailable options
+Get the the current deployment in the YAML format
+kubectl get deploy nginx-deploy -o yaml
+
+execute command
+rollingUpdate is the default update strategy
+maxSurge option is used to configure how many more % Pods can be created with respect to desired count; while doing the update. Similarly maxUnavailable option is used to configure how % Pods can be unavailable while doing the update. 
+
+Delete the current Deployment
+kubectl delete deployment nginx-deploy
+
+
+
+
+
+
+
+
+
+
+
+kubectl apply -f pods.yaml
+
+execute command
+List the Pods with Labels 
+kubectl get pods --show-labels
+
+execute command
+Working with Selectors
+Equality Based Selectors
+Select the Pods for one Label 
+kubectl get pods -l tier=frontend
+
+execute command
+Select the Pods for more than one Label 
+kubectl get pods -l tier=frontend,release=prod
+
+execute command
+A few more examples
+kubectl get pods -l tier!=frontend
+
+execute command
+kubectl get pods -l tier
+
+execute command
+Above one only check, if there is a label called tier.
+Set Based Selectors
+Select the Pods for one Label
+kubectl get pods -l 'release in (frontend)'
+
+execute command
+Select the Pods for more than one Label 
+kubectl get pods -l 'release in (prod,beta)'
+
+execute command
+A few more examples
+kubectl get pods -l 'tier in (frontend), release notin (beta, prod)'
+
+execute command
+kubectl get pods -l 'tier notin (frontend), release notin (beta, prod)'
+
+execute command
+Three kinds of operators are supported: in,notin and exists.
+Delete the pods
+kubectl delete -f pods.yaml
+
+execute command
+matchLabels and matchExpressions
+While doing the selection, we can also use matchLabels and matchExpressions like following :-
+
+Copy Code
+
+selector:
+  matchLabels:
+    component: redis
+  matchExpressions:
+    - {key: tier, operator: In, values: [cache]}
+    - {key: environment, operator: NotIn, values: [dev]}
+
+
+
+
+
+
+
+
+
+Deploy a job from the above YAML file
+kubectl apply -f simplejob.yaml
+
+execute command
+Get the list of Jobs
+kubectl get job
+
+execute command
+Get the list of the pod which are part of the above Job
+kubectl get po
+
+execute command
+Check the logs of the above pod as below to see the output of that Job
+kubectl logs -l app=job
+
+execute command
+Delete the Job
+kubectl delete -f simplejob.yaml    
+
+
+
+
+
+
+kubectl rollout status deployments/kubernetes-bootcamp
+
+kubectl rollout undo deployments/kubernetes-bootcamp
+
+The rollout undo command reverts the deployment to the previous known state (v2 of the image). Updates are versioned and you can revert to any previously known state of a deployment.
+
+
+
+
+
+
+Get the list of services
+kubectl get svc
+
+execute command
+Clean Up
+Delete the Deployment and service
+kubectl delete deploy nginx-deployment
+
+execute command
+kubectl delete svc nginx-svc
+
+
+kubectl replace --force -f kubernetes.yaml
+
+
+
+
+
+
+
+ClusterIp is available only in cluster, not to external world
+
+
+
+kubectl get storageclass
+
+execute command
+kubectl describe sc local-path
+
+
+
+
+For multiple containers, we use the following syntax
+execute command
+Let's apply the multi-container pod config
+kubectl apply -f multi-container.yaml
+
+execute command
+View the logs of both the container one by one
+For the first container:
+kubectl logs multi-container-logs -c first-container
+
+execute command
+For the second container
+kubectl logs multi-container-logs -c second-container
+
+execute command
+To exec into the containers
+For the first container:
+kubectl exec -it multi-container-logs -c first-container -- sh
+
+execute command
+For the second container
+kubectl exec -it multi-container-logs -c second-container -- sh
+
+
+
+
+helm create test
+helm history
+helm demo
+
+
+
+
+
+
+Searching in Helm Hub
+ helm search hub jenkins
+
+execute command
+Searching in a repo
+First, add a chart repository to your helm
+
+Add repo to your helm
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+
+execute command
+Search for jenkins
+helm search repo jenkins
+
+helm upgrade web ./demo/
+
+execute command
+helm list web
+
+
+helm history web
+
+execute command
+Rollback release to version1
+helm rollback web 1
+
+
+Istio
